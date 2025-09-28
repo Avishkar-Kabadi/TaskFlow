@@ -14,6 +14,8 @@ import { Input } from "../../components/ui/input";
 import { Label } from "../../components/ui/label";
 import { registerUser } from "../../service/AuthService";
 import logo from "../../assets/taskflow-logo.jpg";
+import Swal from "sweetalert2";
+
 
 export default function Register() {
   const [name, setName] = useState("");
@@ -23,19 +25,35 @@ export default function Register() {
   const { login } = useAuth();
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsLoading(true);
+  e.preventDefault();
+  setIsLoading(true);
 
-    try {
-      const response = await registerUser(name, email, password);
-      const { token } = response;
-      login(token);
-    } catch (error) {
-      console.error("Registration failed:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  try {
+    const response = await registerUser(name, email, password);
+    const { token } = response;
+    const userData = JSON.stringify(response.userData);
+
+    login(token, userData);
+
+    Swal.fire({
+      title: "Success!",
+      text: "Registered successfully",
+      icon: "success",
+      confirmButtonText: "Cool",
+    });
+  } catch (error) {
+    console.error("Registration failed:", error);
+    Swal.fire({
+      title: "Error!",
+      text: error.message || "Registration failed. Please try again.",
+      icon: "error",
+      confirmButtonText: "Try Again",
+    });
+  } finally {
+    setIsLoading(false);
+  }
+};
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary/20 via-background to-secondary/30 flex items-center justify-center p-4">
@@ -43,7 +61,11 @@ export default function Register() {
         {/* Logo and Brand */}
         <div className="text-center mb-8">
           <div className="mx-auto w-16 h-16 bg-primary rounded-2xl flex items-center justify-center mb-4 shadow-lg">
-            <img src={logo} alt="TaskFlow Logo" className="w-16 h-16 rounded-2xl" />
+            <img
+              src={logo}
+              alt="TaskFlow Logo"
+              className="w-16 h-16 rounded-2xl"
+            />
           </div>
         </div>
 

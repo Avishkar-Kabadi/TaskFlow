@@ -13,13 +13,13 @@ const createTask = async (title, description) => {
         body: JSON.stringify({ title, description })
     });
     console.log(token);
+    const data = await results.json();
 
     if (!results.status == 201) {
-        throw new Error("Failed to create task");
+        throw new Error(data.message || "Failed to create task");
 
     }
 
-    const data = await results.json();
     return data;
 }
 
@@ -49,11 +49,12 @@ const markedAsCompleted = async (id) => {
             'Authorization': `Bearer ${token}`
         }
     });
+    const data = await res.json();
+
     if (!res.ok) {
-        throw new Error('Failed to marked as completed')
+        throw new Error(data.message || 'Failed to marked as completed')
     }
 
-    const data = await res.json();
     return data;
 
 }
@@ -69,10 +70,11 @@ const updateTask = async (id, title, description) => {
         },
         body: JSON.stringify({ title, description })
     });
-    if (!res.ok) {
-        throw new Error('Failed to update task');
-    }
     const data = await res.json();
+
+    if (!res.ok) {
+        throw new Error(data.message || 'Failed to update task');
+    }
     return data;
 }
 
@@ -84,9 +86,9 @@ const deleteTask = async (id) => {
             'Authorization': `Bearer ${token}`
         },
     });
-
+    const errorData = await res.json()
     if (!res.ok) {
-        throw new Error('Failed to delete task');
+        throw new Error(errorData.message || 'Failed to delete task');
     }
     return null;
 }

@@ -17,7 +17,7 @@ const taskRoutes = require('./routes/taskRoutes');
 const corsOptions = {
     origin: `${process.env.FRONTEND_URL}`,
     credentials: true,
-    methods: ['GET', 'POST', 'PATCH', 'DELETE'],
+    methods: ['GET', 'POST', 'PATCH', 'DELETE', 'PUT'],
     allowedHeaders: ['Content-Type', 'Authorization']
 }
 

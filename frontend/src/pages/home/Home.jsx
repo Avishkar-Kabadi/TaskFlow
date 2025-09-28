@@ -1,6 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Swal from "sweetalert2";
+import logo from "../../assets/taskflow-logo.jpg";
+import profile from "../../assets/user-profile-avatar.jpg";
 import { useAuth } from "../../AuthContext";
 import {
   createTask,
@@ -9,8 +12,6 @@ import {
   markedAsCompleted,
   updateTask,
 } from "../../service/TaskService";
-import logo from "../../assets/taskflow-logo.jpg";
-import profile from "../../assets/user-profile-avatar.jpg";
 
 export default function Home() {
   const { logout } = useAuth();
@@ -37,6 +38,14 @@ export default function Home() {
 
   const [tasks, setTasks] = useState([]);
 
+  const handleCancel = () => {
+    setTaskTitle("");
+    setTaskDescription("");
+    setEditingTask(null);
+    setShowAddTaskModal(false);
+    setShowEditTaskModal(false);
+  };
+
   const handleGetTasks = async () => {
     try {
       const response = await getAllTasks();
@@ -45,14 +54,12 @@ export default function Home() {
       error("Error fetching tasks:", error);
     }
   };
-  // Get today's tasks
   const today = new Date().toDateString();
   const todaysTasks = tasks.filter((task) => {
     const taskDate = new Date(task.createdAt).toDateString();
     return taskDate === today;
   });
 
-  // Group tasks by date
   const tasksByDate = tasks.reduce((acc, task) => {
     const date = new Date(task.createdAt).toDateString();
     if (!acc[date]) {
@@ -80,8 +87,20 @@ export default function Home() {
         setTaskTitle("");
         setTaskDescription("");
         setShowAddTaskModal(false);
+        Swal.fire({
+          title: "Success!",
+          text: response.message || "Task added successfully",
+          icon: "success",
+          confirmButtonText: "Cool",
+        });
       } catch (error) {
-        console.error("Error creating task:", error);
+        Swal.fire({
+          title: "Error!",
+          text: error.message || "Failed to add task. Please try again.",
+          icon: "error",
+          confirmButtonText: "Try Again",
+        });
+        console.log("Error adding task:", error);
       }
     }
   };
@@ -108,9 +127,22 @@ export default function Home() {
           setEditingTask(null);
           setShowEditTaskModal(false);
           handleGetTasks();
+
+          Swal.fire({
+            title: "Success!",
+            text: res.message || "Task updated successfully",
+            icon: "success",
+            confirmButtonText: "Cool",
+          });
         }
       } catch (error) {
         console.log(error);
+        Swal.fire({
+          title: "Error!",
+          text: error.message || "Failed to update task. Please try again.",
+          icon: "error",
+          confirmButtonText: "Try Again",
+        });
       }
     }
   };
@@ -118,9 +150,21 @@ export default function Home() {
   const handleDeleteTask = async (taskId) => {
     try {
       await deleteTask(taskId);
+      Swal.fire({
+        title: "Deleted!",
+        text: "Task deleted successfully",
+        icon: "success",
+        confirmButtonText: "Cool",
+      });
       handleGetTasks();
     } catch (error) {
       console.log(error);
+      Swal.fire({
+        title: "Error!",
+        text: error.message || "Failed to delete task. Please try again.",
+        icon: "error",
+        confirmButtonText: "Try Again",
+      });
     }
   };
 
@@ -129,10 +173,23 @@ export default function Home() {
       const response = await markedAsCompleted(taskId);
       if (response.task) {
         console.log("Task marked as successfully");
+        Swal.fire({
+          title: "Success!",
+          text: response.message || "Task status updated successfully",
+          icon: "success",
+          confirmButtonText: "Cool",
+        });
         handleGetTasks();
       }
     } catch (error) {
       console.log(error);
+      Swal.fire({
+        title: "Error!",
+        text:
+          error.message || "Failed to update task status. Please try again.",
+        icon: "error",
+        confirmButtonText: "Try Again",
+      });
     }
   };
 
@@ -227,6 +284,7 @@ export default function Home() {
                   <div className="flex items-start justify-between">
                     <div className="flex items-start space-x-3 flex-1">
                       <button
+                        disabled={task.completed}
                         onClick={() => toggleTaskComplete(task._id)}
                         className={`w-5 h-5 rounded border-2 flex items-center justify-center mt-1 transition-colors duration-200 ${
                           task.completed
@@ -263,6 +321,7 @@ export default function Home() {
                     <div className="flex space-x-2 ml-4">
                       <button
                         onClick={() => handleEditTask(task)}
+                        hidden={task.completed}
                         className="px-3 py-1 bg-secondary hover:bg-secondary/80 text-secondary-foreground rounded text-sm font-medium transition-colors duration-200"
                       >
                         Edit
@@ -354,7 +413,7 @@ export default function Home() {
               <div className="flex space-x-3 pt-4">
                 <button
                   type="submit"
-                  onClick={() => setShowAddTaskModal(false)}
+                  onClick={handleCancel}
                   className="flex-1 px-4 py-2 bg-secondary hover:bg-secondary/80 text-secondary-foreground rounded-lg font-medium transition-colors duration-200"
                 >
                   Cancel
@@ -413,7 +472,7 @@ export default function Home() {
               <div className="flex space-x-3 pt-4">
                 <button
                   type="button"
-                  onClick={() => setShowEditTaskModal(false)}
+                  onClick={handleCancel}
                   className="flex-1 px-4 py-2 bg-secondary hover:bg-secondary/80 text-secondary-foreground rounded-lg font-medium transition-colors duration-200"
                 >
                   Cancel

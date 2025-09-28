@@ -1,7 +1,10 @@
 "use client";
 import { useState } from "react";
+import Swal from "sweetalert2";
 import { useAuth } from "../../AuthContext";
 import { Button } from "../../components/ui/button";
+
+import logo from "../../assets/taskflow-logo.jpg";
 import {
   Card,
   CardContent,
@@ -12,7 +15,6 @@ import {
 import { Input } from "../../components/ui/input";
 import { Label } from "../../components/ui/label";
 import { loginUser } from "../../service/AuthService";
-import logo from "../../assets/taskflow-logo.jpg";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -30,8 +32,20 @@ export default function Login() {
       const userData = JSON.stringify(response.userData);
 
       login(token, userData);
+      Swal.fire({
+        title: "Success!",
+        text: "Logged in successfully",
+        icon: "success",
+        confirmButtonText: "Cool",
+      });
     } catch (error) {
       console.error("Login failed:", error);
+      Swal.fire({
+        title: "Error!",
+        text: error.message || "Login failed. Please try again.",
+        icon: "error",
+        confirmButtonText: "Try Again",
+      });
     } finally {
       setIsLoading(false);
     }
@@ -43,7 +57,11 @@ export default function Login() {
         {/* Logo and Brand */}
         <div className="text-center mb-8">
           <div className="mx-auto w-16 h-16 bg-primary rounded-2xl flex items-center justify-center mb-4 shadow-lg">
-            <img src={logo} alt="TaskFlow Logo" className="w-16 h-16  rounded-2xl" />
+            <img
+              src={logo}
+              alt="TaskFlow Logo"
+              className="w-16 h-16  rounded-2xl"
+            />
           </div>
           {/* <h1 className="text-3xl font-bold text-foreground mb-2">TaskFlow</h1> */}
         </div>
