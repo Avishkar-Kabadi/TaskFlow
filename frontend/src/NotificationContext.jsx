@@ -23,7 +23,7 @@ export const NotificationsProvider = ({ children }) => {
           icon: logo,
         });
       }
-    }, 36000000); 
+    }, 36000000);
 
     return () => clearInterval(interval);
   }, []);

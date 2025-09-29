@@ -64,12 +64,12 @@ export default function App() {
       if (pendingTasks.length > 0 && Notification.permission === "granted") {
         new Notification("TaskFlow Reminder", {
           body: `You have ${pendingTasks.length} pending tasks!`,
-          icon: "/logo.png", 
+          icon: "/logo.png",
         });
       }
-    }, 3600000); 
+    }, 3600000);
 
-    return () => clearInterval(interval); 
+    return () => clearInterval(interval);
   }, []);
 
   useEffect(() => {

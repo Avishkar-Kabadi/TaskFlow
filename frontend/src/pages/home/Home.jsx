@@ -245,11 +245,23 @@ export default function Home() {
             <span>Add Task</span>
           </button>
           <button
-            onClick={() => setShowAllTasksModal(true)}
+            onClick={() => {
+              setShowAllTasksModal(true);
+              handleGetTasks();
+            }}
             className="flex-1 bg-card hover:bg-secondary text-card-foreground px-6 py-4 rounded-xl font-semibold border border-border shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center space-x-2"
           >
             <span>🗓️</span>
             <span>View All Tasks</span>
+          </button>
+          <button
+            onClick={() => {
+              handleGetTasks();
+            }}
+            className="flex-1 bg-blue-100 hover:bg-secondary text-card-foreground px-6 py-4 rounded-xl font-semibold border border-border shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center space-x-2"
+          >
+            <span>🔄</span>
+            <span>Refresh</span>
           </button>
         </div>
 
