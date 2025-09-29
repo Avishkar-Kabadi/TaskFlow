@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import logo from "../../assets/taskflow-logo.jpg";
 import profile from "../../assets/user-profile-avatar.jpg";
@@ -12,7 +13,6 @@ import {
   markedAsCompleted,
   updateTask,
 } from "../../service/TaskService";
-import { useNavigate } from "react-router-dom";
 
 export default function Home() {
   const { logout } = useAuth();
@@ -201,8 +201,10 @@ export default function Home() {
                 <img
                   src={logo}
                   alt="TaskFlow Logo"
-                  onClick={() => navigate("https://github.com/Avishkar-Kabadi")}
-                  className="w-12 h-12 rounded-2xl"
+                  onClick={() =>
+                    window.open("https://github.com/Avishkar-Kabadi", "_blank")
+                  }
+                  className="w-12 h-12 rounded-2xl cursor-pointer"
                 />
               </div>
               <h1 className="text-2xl font-bold text-foreground">TaskFlow</h1>
@@ -246,7 +248,7 @@ export default function Home() {
             onClick={() => setShowAllTasksModal(true)}
             className="flex-1 bg-card hover:bg-secondary text-card-foreground px-6 py-4 rounded-xl font-semibold border border-border shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center space-x-2"
           >
-            <span>📅</span>
+            <span>🗓️</span>
             <span>View All Tasks</span>
           </button>
         </div>

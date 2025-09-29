@@ -8,22 +8,34 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    if (token) {
-      setIsAuthenticated(true);
+    const expiry = localStorage.getItem("tokenExpiry");
+
+    if (token && expiry) {
+      const now = Date.now();
+      if (now < Number(expiry)) {
+        setIsAuthenticated(true);
+      } else {
+        logout();
+      }
     }
     setLoading(false);
   }, []);
 
   const login = (token, userData) => {
+    const expiry = Date.now() + 24 * 60 * 60 * 1000; 
     localStorage.setItem("token", token);
     localStorage.setItem("userData", userData);
+    localStorage.setItem("tokenExpiry", expiry.toString());
     setIsAuthenticated(true);
   };
+
   const logout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("userData");
+    localStorage.removeItem("tokenExpiry");
     setIsAuthenticated(false);
   };
+
   return (
     <AuthContext.Provider value={{ isAuthenticated, login, logout, loading }}>
       {children}
