@@ -47,9 +47,8 @@ const createTask = async (title, description) => {
         localTasks.push(data.task);
         saveTasksToLocal(localTasks);
         console.log("Local tasks after push backend task:", localTasks);
-        getAllTasks();
-
         return data;
+
     } catch (err) {
         console.warn("Offline mode: saving task locally", err);
 

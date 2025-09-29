@@ -88,6 +88,7 @@ export default function Home() {
         setTaskTitle("");
         setTaskDescription("");
         setShowAddTaskModal(false);
+        handleGetTasks();
         Swal.fire({
           title: "Success!",
           text: response.message || "Task added successfully",
