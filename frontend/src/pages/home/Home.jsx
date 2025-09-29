@@ -12,9 +12,11 @@ import {
   markedAsCompleted,
   updateTask,
 } from "../../service/TaskService";
+import { useNavigate } from "react-router-dom";
 
 export default function Home() {
   const { logout } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
     handleGetTasks();
@@ -32,7 +34,6 @@ export default function Home() {
   const [editingTask, setEditingTask] = useState(null);
 
   const userData = localStorage.getItem("userData");
-  console.log(userData);
 
   const { email, name } = JSON.parse(userData);
 
@@ -100,7 +101,6 @@ export default function Home() {
           icon: "error",
           confirmButtonText: "Try Again",
         });
-        console.log("Error adding task:", error);
       }
     }
   };
@@ -136,7 +136,6 @@ export default function Home() {
           });
         }
       } catch (error) {
-        console.log(error);
         Swal.fire({
           title: "Error!",
           text: error.message || "Failed to update task. Please try again.",
@@ -158,7 +157,6 @@ export default function Home() {
       });
       handleGetTasks();
     } catch (error) {
-      console.log(error);
       Swal.fire({
         title: "Error!",
         text: error.message || "Failed to delete task. Please try again.",
@@ -172,7 +170,6 @@ export default function Home() {
     try {
       const response = await markedAsCompleted(taskId);
       if (response.task) {
-        console.log("Task marked as successfully");
         Swal.fire({
           title: "Success!",
           text: response.message || "Task status updated successfully",
@@ -182,7 +179,6 @@ export default function Home() {
         handleGetTasks();
       }
     } catch (error) {
-      console.log(error);
       Swal.fire({
         title: "Error!",
         text:
@@ -205,6 +201,7 @@ export default function Home() {
                 <img
                   src={logo}
                   alt="TaskFlow Logo"
+                  onClick={() => navigate("https://github.com/Avishkar-Kabadi")}
                   className="w-12 h-12 rounded-2xl"
                 />
               </div>

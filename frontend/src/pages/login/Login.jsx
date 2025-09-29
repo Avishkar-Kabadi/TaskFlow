@@ -15,6 +15,7 @@ import {
 import { Input } from "../../components/ui/input";
 import { Label } from "../../components/ui/label";
 import { loginUser } from "../../service/AuthService";
+import { Link } from "react-router-dom";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -39,7 +40,6 @@ export default function Login() {
         confirmButtonText: "Cool",
       });
     } catch (error) {
-      console.error("Login failed:", error);
       Swal.fire({
         title: "Error!",
         text: error.message || "Login failed. Please try again.",
@@ -119,12 +119,12 @@ export default function Login() {
             <div className="mt-6 text-center">
               <p className="text-sm text-muted-foreground">
                 {"Don't have an account? "}
-                <a
-                  href="/register"
+                <Link
+                  to="/register"
                   className="font-semibold text-primary hover:text-primary/80 transition-colors"
                 >
                   Sign up here
-                </a>
+                </Link>
               </p>
             </div>
           </CardContent>

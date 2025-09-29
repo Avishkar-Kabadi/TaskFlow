@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import Swal from "sweetalert2";
+import logo from "../../assets/taskflow-logo.jpg";
 import { useAuth } from "../../AuthContext";
 import { Button } from "../../components/ui/button";
 import {
@@ -13,9 +15,6 @@ import {
 import { Input } from "../../components/ui/input";
 import { Label } from "../../components/ui/label";
 import { registerUser } from "../../service/AuthService";
-import logo from "../../assets/taskflow-logo.jpg";
-import Swal from "sweetalert2";
-
 
 export default function Register() {
   const [name, setName] = useState("");
@@ -25,35 +24,33 @@ export default function Register() {
   const { login } = useAuth();
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
-  setIsLoading(true);
+    e.preventDefault();
+    setIsLoading(true);
 
-  try {
-    const response = await registerUser(name, email, password);
-    const { token } = response;
-    const userData = JSON.stringify(response.userData);
+    try {
+      const response = await registerUser(name, email, password);
+      const { token } = response;
+      const userData = JSON.stringify(response.userData);
 
-    login(token, userData);
+      login(token, userData);
 
-    Swal.fire({
-      title: "Success!",
-      text: "Registered successfully",
-      icon: "success",
-      confirmButtonText: "Cool",
-    });
-  } catch (error) {
-    console.error("Registration failed:", error);
-    Swal.fire({
-      title: "Error!",
-      text: error.message || "Registration failed. Please try again.",
-      icon: "error",
-      confirmButtonText: "Try Again",
-    });
-  } finally {
-    setIsLoading(false);
-  }
-};
-
+      Swal.fire({
+        title: "Success!",
+        text: "Registered successfully",
+        icon: "success",
+        confirmButtonText: "Cool",
+      });
+    } catch (error) {
+      Swal.fire({
+        title: "Error!",
+        text: error.message || "Registration failed. Please try again.",
+        icon: "error",
+        confirmButtonText: "Try Again",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary/20 via-background to-secondary/30 flex items-center justify-center p-4">

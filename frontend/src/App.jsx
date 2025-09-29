@@ -3,7 +3,6 @@ import Home from "./pages/home/Home";
 import Login from "./pages/login/Login";
 import Register from "./pages/register/Register";
 
-
 import { useAuth } from "./AuthContext";
 
 export default function App() {
@@ -26,15 +25,15 @@ export default function App() {
         />
         <Route
           path="/login"
-          element={!isAuthenticated ? <Login /> : <Navigate to="/home" />}
+          element={isAuthenticated ? <Navigate to="/home" /> : <Login />}
         />
         <Route
           path="/register"
-          element={!isAuthenticated ? <Register /> : <Navigate to="/home" />}
+          element={isAuthenticated ? <Navigate to="/home" /> : <Register />}
         />
         <Route
           path="/home"
-          element={isAuthenticated ? <Home /> : <Navigate to="/login" />}
+          element={!isAuthenticated ? <Navigate to="/login" /> : <Home />}
         />
       </Routes>
     </BrowserRouter>
