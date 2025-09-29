@@ -12,7 +12,7 @@ const isLoggedIn = async (req, res, next) => {
         if (blacklisted) {
             return res.status(401).json({ message: "Unauthorized: Token is blacklisted" });
         }
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const decoded = jwt.verify(token, "Xv9k3!nT@6qZ#pW8$rL2^sY1*bE7&dG0");
         req.user = decoded;
         next();
     } catch (error) {
