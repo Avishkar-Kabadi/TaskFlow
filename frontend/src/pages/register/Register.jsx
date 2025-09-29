@@ -15,6 +15,7 @@ import {
 import { Input } from "../../components/ui/input";
 import { Label } from "../../components/ui/label";
 import { registerUser } from "../../service/AuthService";
+import { Link } from "react-router-dom";
 
 export default function Register() {
   const [name, setName] = useState("");
@@ -134,12 +135,12 @@ export default function Register() {
             <div className="mt-6 text-center">
               <p className="text-sm text-muted-foreground">
                 Already have an account?{" "}
-                <a
-                  href="/login"
+                <Link
+                  to="/login"
                   className="font-semibold text-primary hover:text-primary/80 transition-colors"
                 >
                   Sign in here
-                </a>
+                </Link>
               </p>
             </div>
           </CardContent>
