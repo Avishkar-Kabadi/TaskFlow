@@ -28,7 +28,7 @@ export const NotificationsProvider = ({ children }) => {
           });
         }
       }
-    }, 3600);
+    }, 36000000);
 
     return () => clearInterval(interval);
   }, []);
