@@ -47,30 +47,30 @@ import Home from "./pages/home/Home";
 import Login from "./pages/login/Login";
 import Register from "./pages/register/Register";
 import { getTasksFromLocal, saveTasksToLocal } from "./service/TaskService";
-
+import Swal from "sweetalert2";
 export default function App() {
   const { isAuthenticated, loading } = useAuth();
   const baseurl = import.meta.env.VITE_BASE_URL;
 
-  useEffect(() => {
-    if (!("Notification" in window)) return;
+  // useEffect(() => {
+  //   if (!("Notification" in window)) return;
 
-    Notification.requestPermission();
+  //   Notification.requestPermission();
 
-    const interval = setInterval(() => {
-      const tasks = JSON.parse(localStorage.getItem("tasks") || "[]");
-      const pendingTasks = tasks.filter((t) => !t.completed);
+  //   const interval = setInterval(() => {
+  //     const tasks = JSON.parse(localStorage.getItem("tasks") || "[]");
+  //     const pendingTasks = tasks.filter((t) => !t.completed);
 
-      if (pendingTasks.length > 0 && Notification.permission === "granted") {
-        new Notification("TaskFlow Reminder", {
-          body: `You have ${pendingTasks.length} pending tasks!`,
-          icon: "/logo.png",
-        });
-      }
-    }, 3600000);
+  //     if (pendingTasks.length > 0 && Notification.permission === "granted") {
+  //       new Notification("TaskFlow Reminder", {
+  //         body: `You have ${pendingTasks.length} pending tasks!`,
+  //         icon: "/logo.png",
+  //       });
+  //     }
+  //   }, 3600000);
 
-    return () => clearInterval(interval);
-  }, []);
+  //   return () => clearInterval(interval);
+  // }, []);
 
   useEffect(() => {
     const syncOfflineTasks = async () => {
@@ -100,7 +100,12 @@ export default function App() {
             saveTasksToLocal(updatedTasks);
           }
         } catch (err) {
-          console.error("Failed to sync task", t, err);
+          Swal.fire({
+            title: "Error",
+            text: "Server is busy, Please try again later!",
+            icon: "error",
+            confirmButtonText: "ok",
+          });
         }
       }
     };

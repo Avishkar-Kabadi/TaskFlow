@@ -9,7 +9,6 @@ export const NotificationsProvider = ({ children }) => {
 
     const interval = setInterval(() => {
       const tasks = JSON.parse(localStorage.getItem("tasks") || "[]");
-
       const today = new Date().toISOString().split("T")[0];
 
       const pendingTasks = tasks.filter((t) => {
@@ -18,12 +17,18 @@ export const NotificationsProvider = ({ children }) => {
       });
 
       if (pendingTasks.length > 0 && Notification.permission === "granted") {
-        new Notification("TaskFlow Reminder", {
-          body: `You have ${pendingTasks.length} pending tasks for today!`,
-          icon: logo,
-        });
+        if (navigator.serviceWorker.controller) {
+          navigator.serviceWorker.controller.postMessage({
+            type: "SHOW_NOTIFICATION",
+            payload: {
+              title: "TaskFlow Reminder",
+              body: `You have ${pendingTasks.length} pending tasks for today!`,
+              icon: logo,
+            },
+          });
+        }
       }
-    }, 36000000);
+    }, 3600);
 
     return () => clearInterval(interval);
   }, []);

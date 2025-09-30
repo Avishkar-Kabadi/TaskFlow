@@ -25,7 +25,6 @@ const saveTasksToLocal = (tasks) => {
 
 const createTask = async (title, description) => {
     let localTasks = getTasksFromLocal() || [];
-    console.log("Before push, localTasks:", localTasks);
 
     try {
         const res = await fetch(`${baseurl}/tasks/create`, {
@@ -40,17 +39,14 @@ const createTask = async (title, description) => {
         if (!res.ok) throw new Error("Failed to create task");
 
         const data = await res.json();
-        console.log("Backend response:", data);
 
         if (!data.task) throw new Error("Backend did not return task");
 
         localTasks.push(data.task);
         saveTasksToLocal(localTasks);
-        console.log("Local tasks after push backend task:", localTasks);
         return data;
 
     } catch (err) {
-        console.warn("Offline mode: saving task locally", err);
 
         const offlineTask = {
             _id: `offline-${Date.now()}`,
@@ -64,8 +60,6 @@ const createTask = async (title, description) => {
 
         localTasks.push(offlineTask);
         saveTasksToLocal(localTasks);
-        console.log("Local tasks after push offline task:", localTasks);
-        console.log("localStorage now:", localStorage.getItem("tasks"));
 
         return { task: offlineTask, offline: true };
     }
@@ -93,7 +87,6 @@ const getAllTasks = async () => {
 
         return data.tasks;
     } catch (err) {
-        console.warn("Offline mode: fetching tasks from localStorage", err);
         return getTasksFromLocal();
     }
 };
@@ -119,7 +112,6 @@ const markedAsCompleted = async (id) => {
 
         return data;
     } catch (err) {
-        console.warn("Offline mode: marking local task completed", err);
 
         const localTasks = getTasksFromLocal().map((task) =>
             task._id === id ? { ...task, completed: true, offline: true } : task
@@ -152,7 +144,6 @@ const updateTask = async (id, title, description) => {
 
         return data;
     } catch (err) {
-        console.warn("Offline mode: updating local task", err);
 
         const localTasks = getTasksFromLocal().map((task) =>
             task._id === id ? { ...task, title, description, offline: true } : task
@@ -180,7 +171,6 @@ const deleteTask = async (id) => {
 
         return null;
     } catch (err) {
-        console.warn("Offline mode: deleting local task", err);
 
         const localTasks = getTasksFromLocal().filter((task) => task._id !== id);
         saveTasksToLocal(localTasks);
