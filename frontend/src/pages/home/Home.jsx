@@ -6,7 +6,7 @@ import Swal from "sweetalert2";
 import logo from "../../assets/taskflow-logo.jpg";
 import profile from "../../assets/user-profile-avatar.jpg";
 import { useAuth } from "../../AuthContext";
-import logoutUser from "../../service/AuthService";
+import { logoutUser } from "../../service/AuthService";
 import {
   createTask,
   deleteTask,
